@@ -6,12 +6,6 @@
 * 53742 - Bolzico, Nicolás
 * 53952 - Cabrera, Martín Leonel
 
-### Repositorios
-* [frontend app](http://hyperlinkToGihubOrGitlab)
-* [backend app](http://hyperlinkToGihubOrGitlab)
-
-*Nota*: si utiliza un monorepo indicar un solo link con fullstack app.
-
 ---
 
 ## Tema
@@ -23,8 +17,158 @@ Facilita la interacción entre jugadores y directores de juego, así como el seg
 ---
 
 ### Modelo
-![Modelo](modelo.jpeg)
----
+# Modelo de Dominio / Diagrama de Clases
+
+```mermaid
+classDiagram
+    direction TB
+
+    class CAMPAÑA {
+        ID
+        nombre
+        descripción
+        estado
+    }
+
+    class MAPA {
+        ID
+        nombre
+        descripción
+        estado
+    }
+
+    class FICHA_MAPA {
+        posición
+        estado
+    }
+
+    class imagen {
+        ID
+        nombre
+        descripción
+        archivo
+    }
+
+    class CatObjeto {
+        ID
+        nombre
+    }
+
+    class Objeto {
+        id
+        nombre
+        descripción
+        visibleAJugador
+        valor
+    }
+
+    class USUARIO {
+        ID
+        nombre
+        contraseña
+        tipo
+    }
+
+    class Personaje {
+        ID
+        nombre
+        descripción
+        especie
+        armadura
+        iniciativa
+        velocidad
+        vidaMax
+        fuerza
+        destreza
+        constitución
+        inteligencia
+        carisma
+        sabiduría
+    }
+
+    class JUGABLE {
+        nivel
+        manaMax
+        clase
+        experiencia
+        oro
+    }
+
+    class NoJugable {
+        estadoAgresion
+        vidaActual
+    }
+
+    class Rasgo {
+        ID
+        nombre
+        visibleAJugador
+        descripción
+        nivelMinimo
+    }
+
+    class Acción {
+        ID
+        nombre
+        visibleAJugador
+        descripción
+        costoMana
+    }
+
+    class PersonajeCampaña {
+        ID
+        nombre
+        armadura
+        iniciativa
+        velocidad
+        vidaMax
+        vidaActual
+        nivel
+        oro
+        experiencia
+        clase
+        manaMax
+        manaActual
+        fuerza
+        destreza
+        constitución
+        sabiduría
+        carisma
+        inteligencia
+    }
+
+    %% Relaciones
+    CAMPAÑA "1" *-- "0..*" MAPA
+    MAPA "0..*" -- "1" imagen : tiene >
+    MAPA "1" -- "0..*" FICHA_MAPA : tiene >
+
+    FICHA_MAPA "0..*" -- "0..1" imagen
+    FICHA_MAPA "0..*" -- "0..1" NoJugable
+
+    CatObjeto "1" o-- "0..*" Objeto
+    Objeto "0..*" -- "0..1" imagen
+    Objeto "0..*" -- "0..*" Personaje : tiene (Cantidad) >
+
+    Personaje <|-- JUGABLE
+    Personaje <|-- NoJugable
+
+    Personaje "0..*" -- "0..*" Rasgo : tiene >
+    Personaje "0..*" -- "0..*" Acción
+    CAMPAÑA "0..1" -- "0..*" Personaje
+    CAMPAÑA "0..1" -- "0..1" NoJugable
+
+    USUARIO "0..1" -- "0..*" CAMPAÑA : crea >
+    USUARIO "0..*" -- "1..1" CAMPAÑA : participa >
+    USUARIO "0..1" -- "0..*" JUGABLE : crea >
+
+    CAMPAÑA "1..*" -- "0..*" PersonajeCampaña : participan
+    USUARIO "1" -- "0..*" PersonajeCampaña
+    JUGABLE "1" -- "0..*" PersonajeCampaña
+
+    PersonajeCampaña "0..*" -- "0..*" Objeto : tiene >
+    PersonajeCampaña "0..*" -- "0..*" Rasgo : tiene >
+    PersonajeCampaña "0..*" -- "0..*" Acción : tiene >
+```
 
 ## Alcance Funcional 
 
